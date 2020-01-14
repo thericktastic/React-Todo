@@ -1,38 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
 
-class TodoForm extends Component {
-  constructor() {
-    super();
-    this.state = {
-      todoText: ""
-    };
-  }
 
-  handleChanges = e => {
-    this.setState({
-      todoText: e.target.value
-    });
-  };
+const TodoForm = props => {
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.addTodo(this.state.todoText);
-  };
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          name="todo"
-          value={this.state.todoText}
-          onChange={this.handleChanges}
-        />
-        <button>Add</button>
-        <button>Clear Completed</button>
-      </form>
-    );
-  }
-}
+  return (
+    <form className="stacked add-form" onSubmit={props.handleSubmit}>
+      <input
+        type="text"
+        name="todo"
+        value={props.todoText}
+        onChange={props.handleChanges}
+      />
+      <button className="button">ADD TO LIST</button>
+    </form>
+  );
+};
 
 export default TodoForm;

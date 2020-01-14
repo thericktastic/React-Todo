@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import TodoForm from './components/TodoComponents/TodoForm';
-import TodoList from './components/TodoComponents/TodoList';
+import React, { Component } from "react";
+import TodoForm from "./components/TodoComponents/TodoForm";
+import TodoList from "./components/TodoComponents/TodoList";
+import "./components/TodoComponents/Todo.css";
 
 const todoItems = [
   {
@@ -20,27 +21,28 @@ const todoItems = [
   }
 ];
 
-// console.log(todoItems)
-
 class App extends Component {
   // you will need a place to store your state in this component.
   // design `App` to be the parent component of your application.
   // this component is going to take care of state, and any change handlers you need to work with your state
 
-
-  // This constructor function 
-  constructor () {
+  // This constructor function
+  constructor() {
     super();
     this.state = {
-      todoList: todoItems
+      todoList: todoItems,
+      todoText: ""
     };
     // console.log(this.state.todoList)
   }
 
-  // This function allows the user to toggle todo items 
-  // It passes the id into 
+  // This function allows the user to toggle todo items
+  // It passes the id into
   toggleTodo = id => {
     const newTodoList = this.state.todoList.map(item => {
+      // This if statement checks the id of the todo item the user clicks on
+      // against the items on the todo list and changes the value of the
+      // 'completed' key to its opposite.
       if (item.id === id) {
         return {
           ...item,
@@ -50,11 +52,30 @@ class App extends Component {
         return item;
       }
     });
-
-    // This code updates the Todo List 
+    // This code updates the Todo List when
+    // an item is clicked to signify it is completed
     this.setState({
       todoList: newTodoList
     });
+  };
+
+
+  // This handler is passed down to the TodoForm component as props.
+  // It allows the user to type in the input field.
+  handleChanges = e => {
+    this.setState({
+      todoText: e.target.value
+    });
+  };
+
+  // This handler is passed down to the TodoForm component as props.
+  // Once the user has hit some keys in the input field,
+  // it allows the user to add their desired text as a todo item
+  // to the todo list.
+  handleSubmit = e => {
+    e.preventDefault();
+    this.addTodo(this.state.todoText);
+    e.target.reset();
   };
 
 
@@ -74,15 +95,25 @@ class App extends Component {
     });
   };
 
+  // This function filters the todoList 
+  clearCompleted = () => {
+    this.setState({
+      todoList: this.state.todoList.filter(todoItem => {
+        return todoItem.completed === false
+      })
+    });
+  };
+
   render() {
     return (
-      <div>
+      <div className="container">
         <h2>Welcome to your To-Do App!</h2>
         <h3>Current To-Do List</h3>
-        <TodoList todoList={this.state.todoList} toggleTodo={this.toggleTodo}/>
-        <TodoForm addTodo={this.addTodo}/>
-        <input type="submit" value="Submit"/>
-        <input type="submit" value="Clear All"/>
+        <TodoList todoList={this.state.todoList} toggleTodo={this.toggleTodo} clearCompleted={this.clearCompleted}/>
+        <TodoForm
+          handleChanges={this.handleChanges}
+          handleSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
